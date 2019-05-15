@@ -19,4 +19,23 @@ staticDataFrame.selectExpr("CustomerId","(UnitPrice * Quantity) as total_cost", 
 
 spark.conf.set("spark.sql.shuffle.partitions", "5")
 
-val streamingDataFrame = spark.readStream.format("csv").schema(staticSchema).option("header","true").option("maxFilesPerTrigger",1).load("c:\\saurav\\git-repo\\Spark-The-Definitive-Guide\\data\\retail-data\\by-day\\*.csv")
+val streamingDataFrame = spark.readStream.format("csv")
+.schema(staticSchema)
+.option("header","true")
+.option("maxFilesPerTrigger",1)
+.load("c:\\saurav\\git-repo\\Spark-The-Definitive-Guide\\data\\retail-data\\by-day\\*.csv")
+
+// Check if data frame is streaming or not
+streamingDataFrame.isStreaming
+
+// Create a new data frame that will have our actial business logic.
+val purchaseByCustomerPerHour = streamingDataFrame.selectExpr("CustomerId","(UnitPrice * Quantity) as total_cost", "InvoiceDate")
+.groupBy( col("CustomerId"), window(col("InvoiceDate"), "1 day"))
+.sum("total_cost")
+
+// Start the stream.
+
+purchaseByCustomerPerHour.writeStream.format("console").queryName("cpq1").outputMode("append").start()
+purchaseByCustomerPerHour.writeStream.format("memory").queryName("cpq2").outputMode("append").start()
+
+spark.sql(""" select * from cpq2 order by `sum(total_cost)` DESC """).show(10)

@@ -2,6 +2,10 @@
 
 val df = spark.read.format("json").load("C:\\saurav\\git-repo\\Spark-The-Definitive-Guide\\data\\flight-data\\json\\2015-summary.json")
 
+val mdf = spark.read.format("json").load("/Users/saurabhjain/soft/spark-2.3.2-bin-hadoop2.7/customdata/Spark-The-Definitive-Guide/data/flight-data/json/2015-summary.json")
+
+mdf.show()
+
 val df2 = spark.read.json("C:\\saurav\\git-repo\\Spark-The-Definitive-Guide\\data\\flight-data\\json\\2015-summary.json")
 
 // Schema defines the column names and types of a data frame.
@@ -55,3 +59,14 @@ personDF.show()
 val seqs = Seq(("Saurabh", "Jain", 32), ("Adam", "G", 45))
 val personDF2 = seqs.toDF()
 personDF2.show()
+
+// On Mac
+val mdf = spark.read.format("json").load("/Users/saurabhjain/soft/spark-2.3.2-bin-hadoop2.7/customdata/Spark-The-Definitive-Guide/data/flight-data/json/2015-summary.json")
+mdf.show()
+
+mdf.select("DEST_COUNTRY_NAME", "ORIGIN_COUNTRY_NAME").show(15)
+
+mdf.selectExpr("DEST_COUNTRY_NAME as destination", "DEST_COUNTRY_NAME").show(10)
+
+val mdfNewCol = mdf.selectExpr("*", "(DEST_COUNTRY_NAME=ORIGIN_COUNTRY_NAME) as within_same_country")
+mdfNewCol.show(10)

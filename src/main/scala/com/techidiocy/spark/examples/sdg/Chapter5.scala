@@ -70,3 +70,33 @@ mdf.selectExpr("DEST_COUNTRY_NAME as destination", "DEST_COUNTRY_NAME").show(10)
 
 val mdfNewCol = mdf.selectExpr("*", "(DEST_COUNTRY_NAME=ORIGIN_COUNTRY_NAME) as within_same_country")
 mdfNewCol.show(10)
+
+mdfNewCol.createOrReplaceTempView("mdftable")
+
+import org.apche.spark.sql.functions.{expr,col,column}
+
+// Add column
+import org.apache.spark.sql.functions.lit
+mdf.withColumn("NumberOne", lit("1"))
+
+// Column Renaming
+mdf.withColumn("DEST_COUNTRY_NAMEXXXXX", expr("DEST_COUNTRY_NAME")).show(5)
+val mdfm = mdf.withColumnRenamed("DEST_COUNTRY_NAME", "HELLO  WORLD").show(5)
+
+// Drop a column
+mdfm.drop("HELLO  WORLD")
+
+mdf.selectExpr("DEST_COUNTRY_NAME", "ORIGIN_COUNTRY_NAME", "count").filter(col("count") > 10).show(5)
+
+// Get unique or distinct values
+
+mdf.select("DEST_COUNTRY_NAME","ORIGIN_COUNTRY_NAME").distinct().show(100)
+
+// Sampling of actual data.
+
+
+
+
+
+
+

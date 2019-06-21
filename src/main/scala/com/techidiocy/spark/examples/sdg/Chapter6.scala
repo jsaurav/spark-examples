@@ -23,6 +23,8 @@ val df = spark.read.format("csv")
 // Create a table
 df.createOrReplaceTempView("dfTable")
 
+spark.sql(""" select * from dfTable where InvoiceNo=536365 """)
+
 df.where(col("InvoiceNo") > 1000).show(5)
 
 // ANother way or most cleanest way

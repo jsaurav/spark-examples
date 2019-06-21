@@ -31,3 +31,19 @@ and values of type V, we get back an RDD of type [K, Iterable[V]]].
 ## groupBy() works on unpaired data or data where we want to use a different condition besides equality
 on the current key. It takes a function that it applies to every element in the source RDD and uses the
 result to determine the key.
+
+
+
+# Page Rank Problem
+val sourcePRData = sc.textFile("/Users/saurabhjain/git-repo/spark-examples/src/main/scala/com/techidiocy/spark/learning-spark/reading-notes/Ch4-links-data.txt")
+
+import org.apache.spark.HashPartitioner
+
+val linksRDD = sourcePRData.map(value => (value.split("=")(0),value.split("=")(1).split(","))).partitionBy(new HashPartitioner(2)).persist()
+
+linksRDD.partitions
+
+val ranksRDD = linksRDD.mapValues(v => 1.0)
+ranksRDD.partitions
+
+

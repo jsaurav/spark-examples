@@ -1,0 +1,33 @@
+# When creating a pair RDD from an in-memory collection in Scala and Python, we only need to call
+SparkContext.parallelize() on a collection of pairs. To create a pair RDD in Java from an inmemory
+collection, we instead use SparkContext.parallelizePairs().
+
+
+# Transformations
+## cogroup Group data from both RDDs sharing the same key.
+e.g. rdd.cogroup(other) {(1,([2],[])), (3,([4, 6],[9]))}
+
+## Pair RDDs are also still RDDs (of Tuple2 objects in Java/Scala or of Python tuples),
+and thus support the same functions as RDDs.
+
+## Spark has a similar set of operations that combines values that have the same key. 
+These operations return RDDs and thus are transformations rather than actions.
+
+## foldByKey() is quite similar to fold(); both use a zero value of the same type of the data in our
+RDD and combination function. As with fold(), the provided zero value for foldByKey() should
+have no impact when added with your combination function to another element.
+
+## Those familiar with the combiner concept from MapReduce should note that calling reduceByKey() and foldByKey()
+will automatically perform combining locally on each machine before computing global totals for each key. The user does
+not need to specify a combiner. The more general combineByKey() interface allows you to customize combining behavior.
+
+## combineByKey() is the most general of the per-key aggregation functions. Most of the other per-key
+combiners are implemented using it. Like aggregate(), combineByKey() allows the user to return
+values that are not the same type as our input data.
+
+## will group our data using the key in groupByKey() our RDD. On an RDD consisting of keys of type
+and values of type V, we get back an RDD of type [K, Iterable[V]]].
+
+## groupBy() works on unpaired data or data where we want to use a different condition besides equality
+on the current key. It takes a function that it applies to every element in the source RDD and uses the
+result to determine the key.

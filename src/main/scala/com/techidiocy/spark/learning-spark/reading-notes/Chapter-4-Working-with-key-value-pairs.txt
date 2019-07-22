@@ -35,7 +35,9 @@ result to determine the key.
 
 
 # Page Rank Problem
-val sourcePRData = sc.textFile("/Users/saurabhjain/git-repo/spark-examples/src/main/scala/com/techidiocy/spark/learning-spark/reading-notes/Ch4-links-data.txt")
+val sourcePRDataM = sc.textFile("/Users/saurabhjain/git-repo/spark-examples/src/main/scala/com/techidiocy/spark/learning-spark/reading-notes/Ch4-links-data.txt")
+
+val sourcePRDataW = sc.textFile("C:/saurav/git-repo/spark-examples/src/main/scala/com/techidiocy/spark/learning-spark/reading-notes/Ch4-links-data.txt")
 
 import org.apache.spark.HashPartitioner
 
@@ -43,7 +45,16 @@ val linksRDD = sourcePRData.map(value => (value.split("=")(0),value.split("=")(1
 
 linksRDD.partitions
 
-val ranksRDD = linksRDD.mapValues(v => 1.0)
+var ranksRDD = linksRDD.mapValues(v => 1.0)
 ranksRDD.partitions
 
+val joinedRDD = linksRDD.join(ranksRDD)
 
+
+
+for (i <- 0 until 10) {
+val joinedRDD = linksRDD.join(ranksRDD)
+val contributions = joinedRDD.flatMap{ case(pid, (page_links, rank)) => page_links.map(link => (link, rank/page_links.size))}
+ranksRDD = contributions.reduceByKey( (v1, v2) => v1 + v2).mapValues(v => 0.15 + 0.85 * v)
+}
+ranksRDD.saveAsTextFile("C:/saurav/git-repo/spark-examples/src/main/scala/com/techidiocy/spark/learning-spark/reading-notes/ranks")

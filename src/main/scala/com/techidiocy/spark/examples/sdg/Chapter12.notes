@@ -1,0 +1,29 @@
+// Chapter 12 - Resilient Distributed Datasets.
+
+1.) There are times when higher level manipulation will not meet the business or engineering problem
+you are trying to solve. For those cases you might need lower level apis , specfically the RDDs, the spark 
+context and distributed shared variables like accumulators and distributed variables.
+
+2.) 2 kinds of lower level api 
+	2.1) RDD - for manipulation of distributed data.
+	2.2) Accumulators & Broadcast variable - Manipulation of distributed shared variables.
+
+3.) Spark Context is the entry point for the lower level api.
+4.) RDD is immutable , partitioned collection of records.
+5.) In RDDs records are java , python and scala objects.
+6.) RRDs are kind of similar with datasets , with the difference that datasets are stored as a structured data.
+7.) RDDs and Datasets can be converted back and forth to take advantage of both the APIs.
+8.) The most likely reason you want to use RDD is when you need fine grained control over
+the physical distribution of data (Custom partitioning data).
+9.) Easiest way to get an RDD is from a dataframe or a dataset. just call rdd method on it.
+10.) To create an RDD from a collection , we will need to use parallelize method on spark context.
+11.) You can set the name of an RDD , to see it in Spark UI.
+12.) Checkpointing is a mechanism by which an RDD can be saved to disk for future reference. Whenever this rdd is referenced it can be used from the disk rather than the recomputation of the rdd.
+13.) Dataframes do not have concept of checkpointing.
+14.) Spark executes on a per partition basis when it actually starts executing the code.
+
+# Functions that deals with partitions.
+1.) mapPartitions
+2.) mapPartitionsWithIndex
+3.) forEachPartition - no return type
+4.) glom - converts partition to array.

@@ -1,6 +1,9 @@
 // Create a DataFrame from the flight data
 val flightData2015 = spark.read.option("inferSchema", "true").option("header","true").csv("/Users/saurabhjain/soft/spark-2.3.2-bin-hadoop2.7/customdata/Spark-The-Definitive-Guide/data/flight-data/csv/2015-summary.csv")
 
+// python
+flightData2015 = spark.read.option("inferSchema", "true").option("header","true").csv("/Users/saurabhjain/soft/spark-2.3.2-bin-hadoop2.7/customdata/Spark-The-Definitive-Guide/data/flight-data/csv/2015-summary.csv")
+
 // View the data.
 flightData2015.take(10)
 

@@ -93,6 +93,13 @@ mdf.selectExpr("DEST_COUNTRY_NAME", "ORIGIN_COUNTRY_NAME", "count").filter(col("
 mdf.select("DEST_COUNTRY_NAME","ORIGIN_COUNTRY_NAME").distinct().show(100)
 
 // Sampling of actual data.
+mdf.count()
+mdf.sapmple(false, .5, .5).count()
+
+
+// Partitioning
+val dfs = mdf.randomSplit(Array(0.3,0.7), 5)
+dfs(0).count()
 
 
 
